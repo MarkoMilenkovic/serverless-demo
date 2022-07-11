@@ -1,0 +1,60 @@
+service: dynamodb-basic-operations
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:Query"
+        - "dynamodb:BatchWriteItem"
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${file(config.json):DYNAMODB_TABLE}"
+
+functions:
+  generateAppointments:
+    handler: functions/generateAppointments.generateAppointments
+    events:
+      - http:
+          path: appointment
+          method: post
+  getAppointments:
+    handler: functions/getAvailableAppointments.getAvailableAppointments
+    events:
+      - http:
+          path: appointment/employee/{employeeId}/date/{date}
+          method: get
+  scheduleAppointment:
+    handler: functions/scheduleAppointment.scheduleAppointment
+    events:
+      - http:
+          path: appointment
+          method: put
+resources:
+  Resources:
+    BasicOperationsTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: "employeeId"
+          AttributeType: "S"
+        - AttributeName: "appointmentStartTime"
+          AttributeType: "S"
+        KeySchema:
+        - AttributeName: "employeeId"
+          KeyType: "HASH"
+        - AttributeName: appointmentStartTime
+          KeyType: "RANGE"  
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${file(config.json):DYNAMODB_TABLE}
