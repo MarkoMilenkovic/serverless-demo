@@ -1,7 +1,6 @@
-const AWS = require('aws-sdk');
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const dynamoDb = require('../dynamo/dynamodb');
 
-const config = require('../config.json');
+const config = require('../../config.json');
 const tableName = config.DYNAMODB_TABLE;
 const maxItems = 25;
 
@@ -32,7 +31,7 @@ module.exports.generateAppointments = async (event) => {
         slots.push({
             PutRequest: {
                 Item: {
-                    employeeId: employeeId,
+                    employeeId,
                     appointmentStartTime: startDateTime.toISOString()
                 }
             }
@@ -42,7 +41,7 @@ module.exports.generateAppointments = async (event) => {
             slots.push({
                 PutRequest: {
                     Item: {
-                        employeeId: employeeId,
+                        employeeId,
                         appointmentStartTime: newDateTime.toISOString()
                     }
                 }

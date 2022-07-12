@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.2.0"
+    "aws-sdk": "^2.2.0",
+    "serverless-dynamodb-local": "^0.2.40"
   },
   "devDependencies": {
     "serverless-offline": "^8.8.1"

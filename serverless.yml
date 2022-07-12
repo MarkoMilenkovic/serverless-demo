@@ -1,8 +1,5 @@
 service: dynamodb-basic-operations
 frameworkVersion: '3'
-plugins:
-  - serverless-offline
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -21,22 +18,35 @@ provider:
         - "dynamodb:BatchWriteItem"
       Resource:
         - "arn:aws:dynamodb:${self:provider.region}:*:table/${file(config.json):DYNAMODB_TABLE}"
+plugins:
+  - serverless-offline
+  - serverless-dynamodb-local
+#Local DynamoDb configuration
+custom:
+  dynamodb:
+    stages:
+      - ${file(config.json):STAGE}
+    start: 
+      port: 8000
+      migrate: true # create the tables
+      inMemory: true
+      onStart: true
 
 functions:
   generateAppointments:
-    handler: functions/generateAppointments.generateAppointments
+    handler: src/functions/generateAppointments.generateAppointments
     events:
       - http:
           path: appointment
           method: post
   getAppointments:
-    handler: functions/getAvailableAppointments.getAvailableAppointments
+    handler: src/functions/getAvailableAppointments.getAvailableAppointments
     events:
       - http:
           path: appointment/employee/{employeeId}/date/{date}
           method: get
   scheduleAppointment:
-    handler: functions/scheduleAppointment.scheduleAppointment
+    handler: src/functions/scheduleAppointment.scheduleAppointment
     events:
       - http:
           path: appointment

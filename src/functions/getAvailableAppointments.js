@@ -1,7 +1,5 @@
-const AWS = require('aws-sdk');
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-const config = require('../config.json');
+const dynamoDb = require('../dynamo/dynamodb');
+const config = require('../../config.json');
 const tableName = config.DYNAMODB_TABLE;
 
 module.exports.getAvailableAppointments = async (event) => {

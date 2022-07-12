@@ -1,7 +1,6 @@
-const AWS = require('aws-sdk');
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const dynamoDb = require('../dynamo/dynamodb');
 
-const config = require('../config.json');
+const config = require('../../config.json');
 const tableName = config.DYNAMODB_TABLE;
 
 module.exports.scheduleAppointment = async (event) => {
@@ -14,8 +13,8 @@ module.exports.scheduleAppointment = async (event) => {
     const params = {
         TableName: tableName,
         Key: {
-            employeeId: employeeId,
-            appointmentStartTime: appointmentStartTime
+            employeeId,
+            appointmentStartTime
         },
         UpdateExpression: 'SET userId = :userIdVal',
         ConditionExpression: 'attribute_not_exists(userId) AND ' +
