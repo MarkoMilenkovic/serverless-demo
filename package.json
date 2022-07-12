@@ -4,11 +4,15 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
+    "dev": "sls offline start --httpPort 3000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.2.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^8.8.1"
   }
 }

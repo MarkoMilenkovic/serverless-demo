@@ -1,5 +1,7 @@
 service: dynamodb-basic-operations
 frameworkVersion: '3'
+plugins:
+  - serverless-offline
 
 provider:
   name: aws
